@@ -24,5 +24,10 @@ namespace LockIn_API.Entities
 
         public string? ProfilePicture { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+
+        // Navigation properties
+        public ICollection<GroupMember> GroupMembers { get; set; }
+        public ICollection<WorkoutRoutine> WorkoutRoutines { get; set; }
     }
 }
