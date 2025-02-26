@@ -10,14 +10,17 @@ namespace LockIn_API.Services
         private readonly ApplicationDbContext _context;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly ITokenService _tokenService;
+        private readonly ILogger<UserService> _logger;
 
         public UserService(ApplicationDbContext context,
                            IPasswordHasher<User> passwordHasher,
-                           ITokenService tokenService)
+                           ITokenService tokenService,
+                           ILogger<UserService> logger)
         {
             _context = context;
             _passwordHasher = passwordHasher;
             _tokenService = tokenService;
+            _logger = logger;
         }
 
         public async Task<UserProfileDto> RegisterUserAsync(UserRegisterDto userRegisterDto)
@@ -34,6 +37,7 @@ namespace LockIn_API.Services
                 UserId = Guid.NewGuid(),
                 FullName = userRegisterDto.FullName,
                 Email = userRegisterDto.Email,
+                PhoneNumber = userRegisterDto.PhoneNumber,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -41,7 +45,18 @@ namespace LockIn_API.Services
             user.PasswordHash = _passwordHasher.HashPassword(user, userRegisterDto.Password);
 
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "An error occurred while saving the user.");
+                throw;
+            }
+            
 
             // Map the entity to a profile DTO.
             var profile = new UserProfileDto
@@ -49,6 +64,7 @@ namespace LockIn_API.Services
                 UserId = user.UserId,
                 FullName = user.FullName,
                 Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
                 ProfilePicture = user.ProfilePicture,
                 CreatedAt = user.CreatedAt
             };
@@ -96,6 +112,7 @@ namespace LockIn_API.Services
                 UserId = user.UserId,
                 FullName = user.FullName,
                 Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
                 ProfilePicture = user.ProfilePicture,
                 CreatedAt = user.CreatedAt
             };
@@ -113,6 +130,7 @@ namespace LockIn_API.Services
 
             user.FullName = userUpdateDto.FullName;
             user.ProfilePicture = userUpdateDto.ProfilePicture;
+            user.PhoneNumber = userUpdateDto.PhoneNumber;
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
@@ -123,6 +141,7 @@ namespace LockIn_API.Services
                 FullName = user.FullName,
                 Email = user.Email,
                 ProfilePicture = user.ProfilePicture,
+                PhoneNumber = user.PhoneNumber,
                 CreatedAt = user.CreatedAt
             };
 

@@ -11,6 +11,10 @@ namespace LockIn_API.DTOs
         [EmailAddress(ErrorMessage = "Email must be valid.")]
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "Phone number is required.")]
+        [Phone]
+        public string PhoneNumber {  get; set; }
+
         [Required(ErrorMessage = "Password is required.")]
         [MinLength(6, ErrorMessage = "Password must be at least 6 characters long.")]
         public string Password { get; set; }
@@ -37,7 +41,9 @@ namespace LockIn_API.DTOs
         [Required(ErrorMessage = "Full Name is required.")]
         public string FullName { get; set; }
 
-        // Optional field to update profile picture.
+        [Required(ErrorMessage = "Phone number is required.")]
+        public string PhoneNumber { get; set; }
+
         public string ProfilePicture { get; set; }
     }
 
@@ -77,6 +83,7 @@ namespace LockIn_API.DTOs
         public string FullName { get; set; }
         public string Email { get; set; }
         public string ProfilePicture { get; set; }
+        public string PhoneNumber { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 
