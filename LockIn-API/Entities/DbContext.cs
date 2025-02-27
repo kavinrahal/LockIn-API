@@ -36,6 +36,78 @@ namespace LockIn_API.Entities
 
             modelBuilder.Entity<GroupMemberGoal>()
                 .HasKey(gmg => new { gmg.GroupId, gmg.UserId, gmg.MetricId });
+
+            modelBuilder.Entity<DietLog>()
+                .HasOne(dl => dl.User)
+                .WithMany(u => u.DietLogs)  // Ensure User entity has a collection property for DietLogs
+                .HasForeignKey(dl => dl.UserId)
+                .OnDelete(DeleteBehavior.Restrict); // Disables cascade delete for this FK
+
+            modelBuilder.Entity<DietLog>()
+                .HasOne(dl => dl.Group)
+                .WithMany(g => g.DietLogs)  // Ensure Group entity has a collection property for DietLogs
+                .HasForeignKey(dl => dl.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GroupMember>()
+                .HasOne(dl => dl.User)
+                .WithMany(u => u.GroupMembers)
+                .HasForeignKey(dl => dl.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GroupMember>()
+                .HasOne(dl => dl.Group)
+                .WithMany(u => u.GroupMembers)
+                .HasForeignKey(dl => dl.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<WaterIntake>()
+                .HasOne(w => w.User)
+                .WithMany(u => u.WaterIntakes)
+                .HasForeignKey(w => w.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<WaterIntake>()
+                .HasOne(w => w.Group)
+                .WithMany(g => g.WaterIntakes)
+                .HasForeignKey(w => w.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<StepTracking>()
+                .HasOne(st => st.User)
+                .WithMany(u => u.StepTrackings)
+                .HasForeignKey(st => st.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<StepTracking>()
+                .HasOne(st => st.Group)
+                .WithMany(g => g.StepTrackings)
+                .HasForeignKey(st => st.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<WorkoutRoutine>()
+                .HasOne(st => st.User)
+                .WithMany(u => u.WorkoutRoutines)
+                .HasForeignKey(st => st.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<WorkoutRoutine>()
+                .HasOne(st => st.Group)
+                .WithMany(g => g.WorkoutRoutines)
+                .HasForeignKey(st => st.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GroupMemberGoal>()
+                .HasOne(st => st.User)
+                .WithMany(u => u.GroupMemberGoals)
+                .HasForeignKey(st => st.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GroupMemberGoal>()
+                .HasOne(st => st.Group)
+                .WithMany(g => g.GroupMemberGoals)
+                .HasForeignKey(st => st.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

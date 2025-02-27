@@ -28,6 +28,12 @@ namespace LockIn_API.Entities
 
         // Navigation properties
         public ICollection<GroupMember> GroupMembers { get; set; }
+
+        public ICollection<GroupMemberGoal> GroupMemberGoals { get; set; }
         public ICollection<WorkoutRoutine> WorkoutRoutines { get; set; }
+        public ICollection<DietLog> DietLogs { get; set; } = new List<DietLog>();
+        public ICollection<WaterIntake> WaterIntakes { get; set; } = new List<WaterIntake>();
+        public ICollection<StepTracking> StepTrackings { get; set; } = new List<StepTracking>();
+
     }
 }
