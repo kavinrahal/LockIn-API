@@ -19,6 +19,8 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 
 // Register your user service.
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IWorkoutSessionService, WorkoutSessionService>();
+builder.Services.AddScoped<IWorkoutRoutineService,  WorkoutRoutineService>();
 builder.Services.AddControllers();
 
 var app = builder.Build();

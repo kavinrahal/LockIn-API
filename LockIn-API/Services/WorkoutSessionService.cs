@@ -25,7 +25,7 @@ namespace LockIn_API.Services
 
         public async Task<WorkoutSessionDto> LogWorkoutSessionAsync(LogWorkoutSessionDto dto, Guid userId, Guid groupId)
         {
-            // Create a new workout session record.
+            // Create a new workout session record
             var session = new WorkoutSession
             {
                 SessionId = Guid.NewGuid(),
@@ -36,7 +36,7 @@ namespace LockIn_API.Services
                 Notes = dto.Notes
             };
 
-            // Add each exercise performance to the session.
+            // Add each exercise performance to the session
             foreach (var exDto in dto.Exercises)
             {
                 var sessionExercise = new WorkoutSessionExercise
@@ -111,7 +111,7 @@ namespace LockIn_API.Services
         /// </summary>
         private async Task<string?> UpdatePlannedTargetIfImproved(Guid routineId, WorkoutSessionExercise currentExercise, DateTime sessionDate, Guid userId)
         {
-            // Retrieve the most recent previous session for the same routine and exercise.
+            // Retrieve the most recent previous session for the same routine and exercise
             var previousSessionExercise = await _context.WorkoutSessionExercises
                 .Include(se => se.WorkoutSession)
                 .Where(se => se.WorkoutSession.RoutineId == routineId &&
@@ -124,7 +124,7 @@ namespace LockIn_API.Services
             if (previousSessionExercise != null)
             {
                 bool improved = false;
-                // Simple comparison: if either reps or weight improved.
+                // Check if either reps or weight improved
                 if (currentExercise.ActualReps > previousSessionExercise.ActualReps)
                     improved = true;
                 else if (currentExercise.ActualWeight.HasValue && previousSessionExercise.ActualWeight.HasValue &&
@@ -133,7 +133,7 @@ namespace LockIn_API.Services
 
                 if (improved)
                 {
-                    // Update the planned target in RoutineExercise.
+                    // Update the planned target in RoutineExercise
                     var plannedExercise = await _context.RoutineExercises
                         .FirstOrDefaultAsync(re => re.RoutineId == routineId && re.ExerciseId == currentExercise.ExerciseId);
                     if (plannedExercise != null)
