@@ -32,8 +32,9 @@ namespace LockIn_API.Entities
         public ICollection<GroupMemberGoal> GroupMemberGoals { get; set; }
         public ICollection<WorkoutRoutine> WorkoutRoutines { get; set; }
         public ICollection<DietLog> DietLogs { get; set; } = new List<DietLog>();
-        public ICollection<WaterIntake> WaterIntakes { get; set; } = new List<WaterIntake>();
-        public ICollection<StepTracking> StepTrackings { get; set; } = new List<StepTracking>();
+        public ICollection<WaterIntake> WaterIntakes { get; set; }
+        public ICollection<StepTracking> StepTrackings { get; set; }
+        public ICollection<WorkoutSession> WorkoutSessions { get; set; }
 
     }
 }

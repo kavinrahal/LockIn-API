@@ -21,6 +21,8 @@ namespace LockIn_API.Entities
         public DbSet<DietLog> DietLogs { get; set; }
         public DbSet<WaterIntake> WaterIntakes { get; set; }
         public DbSet<StepTracking> StepTracking { get; set; }
+        public DbSet<WorkoutSession> WorkoutSessions { get; set; }
+        public DbSet<WorkoutSessionExercise> WorkoutSessionExercises { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -106,6 +108,18 @@ namespace LockIn_API.Entities
             modelBuilder.Entity<GroupMemberGoal>()
                 .HasOne(st => st.Group)
                 .WithMany(g => g.GroupMemberGoals)
+                .HasForeignKey(st => st.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<WorkoutSession>()
+                .HasOne(st => st.User)
+                .WithMany(u => u.WorkoutSessions)
+                .HasForeignKey(st => st.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<WorkoutSession>()
+                .HasOne(st => st.Group)
+                .WithMany(g => g.WorkoutSessions)
                 .HasForeignKey(st => st.GroupId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
