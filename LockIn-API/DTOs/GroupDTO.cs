@@ -9,6 +9,7 @@ namespace LockIn_API.DTOs
         public string UpdateFrequency { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<MemberDto> Members { get; set; } = new List<MemberDto>();
+        public List<MetricDto> Metrics { get; set; } = new List<MetricDto>();
     }
 
     public class MemberDto
@@ -24,7 +25,10 @@ namespace LockIn_API.DTOs
         public string GroupName { get; set; }
 
         [Required]
-        public string UpdateFrequency { get; set; } 
+        public string UpdateFrequency { get; set; }
+
+        [Required]
+        public List<Guid> MetricIds { get; set; } = new List<Guid>();
     }
 
     public class JoinGroupDto

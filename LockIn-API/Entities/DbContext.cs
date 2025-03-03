@@ -122,6 +122,45 @@ namespace LockIn_API.Entities
                 .WithMany(g => g.WorkoutSessions)
                 .HasForeignKey(st => st.GroupId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Seed predefined metrics
+            modelBuilder.Entity<Metric>().HasData(
+                new Metric
+                {
+                    MetricId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                    Name = "Steps",
+                    Description = "Daily step count",
+                    DataType = "int"
+                },
+                new Metric
+                {
+                    MetricId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                    Name = "Diet",
+                    Description = "Caloric intake for meals",
+                    DataType = "int"
+                },
+                new Metric
+                {
+                    MetricId = Guid.Parse("00000000-0000-0000-0000-000000000003"),
+                    Name = "Water",
+                    Description = "Daily water consumption in liters",
+                    DataType = "int"
+                },
+                new Metric
+                {
+                    MetricId = Guid.Parse("00000000-0000-0000-0000-000000000004"),
+                    Name = "Workout Routine",
+                    Description = "Planned workout routine with target sets, reps, and weights",
+                    DataType = "workout"
+                },
+                new Metric
+                {
+                    MetricId = Guid.Parse("00000000-0000-0000-0000-000000000005"),
+                    Name = "Weekly Spending",
+                    Description = "Amount spent each week",
+                    DataType = "int"
+                }
+            );
         }
     }
 }

@@ -23,11 +23,11 @@ namespace LockIn_API.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation properties
-        public ICollection<GroupMember> GroupMembers { get; set; }
+        public ICollection<GroupMember> GroupMembers { get; set; } = new List<GroupMember>();
 
-        public ICollection<GroupMemberGoal> GroupMemberGoals { get; set; }
-        public ICollection<GroupMetric> GroupMetrics { get; set; }
-        public ICollection<WorkoutRoutine> WorkoutRoutines { get; set; }
+        public ICollection<GroupMemberGoal> GroupMemberGoals { get; set; } = new List<GroupMemberGoal>();
+        public ICollection<GroupMetric> GroupMetrics { get; set; } = new List<GroupMetric>();
+        public ICollection<WorkoutRoutine> WorkoutRoutines { get; set; } = new List<WorkoutRoutine>();
         public ICollection<DietLog> DietLogs { get; set; } = new List<DietLog>();
         public ICollection<WaterIntake> WaterIntakes { get; set; } = new List<WaterIntake>();
         public ICollection<StepTracking> StepTrackings { get; set; } = new List<StepTracking>();

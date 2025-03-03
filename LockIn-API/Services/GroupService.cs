@@ -37,6 +37,30 @@ namespace LockIn_API.Services
 
             _context.GroupMembers.Add(groupMember);
 
+            // For each provided metric ID, validate and add a GroupMetric record.
+            foreach (var metricId in dto.MetricIds)
+            {
+                var metricExists = await _context.Metrics.AnyAsync(m => m.MetricId == metricId);
+                if (!metricExists)
+                {
+                    throw new Exception($"Metric with ID {metricId} does not exist.");
+                }
+
+                // Check if the group already has this metric.
+                bool groupMetricExists = await _context.GroupMetrics
+                    .AnyAsync(gm => gm.GroupId == group.GroupId && gm.MetricId == metricId);
+
+                if (!groupMetricExists)
+                {
+                    var groupMetric = new GroupMetric
+                    {
+                        GroupId = group.GroupId,
+                        MetricId = metricId
+                    };
+                    _context.GroupMetrics.Add(groupMetric);
+                }
+            }
+
             await _context.SaveChangesAsync();
             return await GetGroupDetailsAsync(group.GroupId);
         }
@@ -44,9 +68,11 @@ namespace LockIn_API.Services
         public async Task<GroupDetailsDto> GetGroupDetailsAsync(Guid groupId)
         {
             var group = await _context.Groups
-                .Include(g => g.GroupMembers)
-                    .ThenInclude(gm => gm.User)
-                .FirstOrDefaultAsync(g => g.GroupId == groupId);
+                        .Include(g => g.GroupMembers)
+                            .ThenInclude(gm => gm.User)
+                        .Include(g => g.GroupMetrics)               // Add this Include
+                            .ThenInclude(gm => gm.Metric)            // And then include the Metric
+                        .FirstOrDefaultAsync(g => g.GroupId == groupId);
 
             if (group == null)
                 throw new Exception("Group not found.");
@@ -62,7 +88,13 @@ namespace LockIn_API.Services
                     UserId = gm.UserId,
                     FullName = gm.User.FullName,
                     JoinedAt = gm.JoinedAt
-                }).ToList()
+                }).ToList(),
+                Metrics = group.GroupMetrics?.Select(gm => new MetricDto
+                {
+                    MetricId = gm.MetricId,
+                    Name = gm.Metric.Name,
+                    DataType = gm.Metric.DataType
+                }).ToList() ?? new List<MetricDto>()
             };
 
             return dto;
@@ -70,9 +102,8 @@ namespace LockIn_API.Services
 
         public async Task<IEnumerable<GroupDetailsDto>> GetUserGroupsAsync(Guid userId)
         {
-            var groups = await _context.GroupMembers
-                .Where(gm => gm.UserId == userId)
-                .Select(gm => gm.Group)
+            var groups = await _context.Groups
+                .Where(g => g.GroupMembers.Any(gm => gm.UserId == userId))
                 .Include(g => g.GroupMembers)
                     .ThenInclude(gm => gm.User)
                 .ToListAsync();

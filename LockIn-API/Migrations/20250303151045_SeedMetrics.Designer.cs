@@ -4,6 +4,7 @@ using LockIn_API.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LockIn_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250303151045_SeedMetrics")]
+    partial class SeedMetrics
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,7 +66,7 @@ namespace LockIn_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("DietLogs", (string)null);
+                    b.ToTable("DietLogs");
                 });
 
             modelBuilder.Entity("LockIn_API.Entities.Exercise", b =>
@@ -93,7 +96,7 @@ namespace LockIn_API.Migrations
 
                     b.HasKey("ExerciseId");
 
-                    b.ToTable("Exercises", (string)null);
+                    b.ToTable("Exercises");
                 });
 
             modelBuilder.Entity("LockIn_API.Entities.Group", b =>
@@ -120,7 +123,7 @@ namespace LockIn_API.Migrations
 
                     b.HasIndex("AdminId");
 
-                    b.ToTable("Groups", (string)null);
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("LockIn_API.Entities.GroupMember", b =>
@@ -138,7 +141,7 @@ namespace LockIn_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("GroupMembers", (string)null);
+                    b.ToTable("GroupMembers");
                 });
 
             modelBuilder.Entity("LockIn_API.Entities.GroupMemberGoal", b =>
@@ -166,7 +169,7 @@ namespace LockIn_API.Migrations
 
                     b.HasIndex("WorkoutRoutineId");
 
-                    b.ToTable("GroupMemberGoals", (string)null);
+                    b.ToTable("GroupMemberGoals");
                 });
 
             modelBuilder.Entity("LockIn_API.Entities.GroupMetric", b =>
@@ -181,7 +184,7 @@ namespace LockIn_API.Migrations
 
                     b.HasIndex("MetricId");
 
-                    b.ToTable("GroupMetrics", (string)null);
+                    b.ToTable("GroupMetrics");
                 });
 
             modelBuilder.Entity("LockIn_API.Entities.Metric", b =>
@@ -204,7 +207,7 @@ namespace LockIn_API.Migrations
 
                     b.HasKey("MetricId");
 
-                    b.ToTable("Metrics", (string)null);
+                    b.ToTable("Metrics");
 
                     b.HasData(
                         new
@@ -277,7 +280,7 @@ namespace LockIn_API.Migrations
 
                     b.HasIndex("RoutineId");
 
-                    b.ToTable("RoutineExercises", (string)null);
+                    b.ToTable("RoutineExercises");
                 });
 
             modelBuilder.Entity("LockIn_API.Entities.StepTracking", b =>
@@ -304,7 +307,7 @@ namespace LockIn_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("StepTracking", (string)null);
+                    b.ToTable("StepTracking");
                 });
 
             modelBuilder.Entity("LockIn_API.Entities.User", b =>
@@ -364,7 +367,7 @@ namespace LockIn_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("WaterIntakes", (string)null);
+                    b.ToTable("WaterIntakes");
                 });
 
             modelBuilder.Entity("LockIn_API.Entities.WorkoutRoutine", b =>
@@ -395,7 +398,7 @@ namespace LockIn_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("WorkoutRoutines", (string)null);
+                    b.ToTable("WorkoutRoutines");
                 });
 
             modelBuilder.Entity("LockIn_API.Entities.WorkoutSession", b =>
@@ -427,7 +430,7 @@ namespace LockIn_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("WorkoutSessions", (string)null);
+                    b.ToTable("WorkoutSessions");
                 });
 
             modelBuilder.Entity("LockIn_API.Entities.WorkoutSessionExercise", b =>
@@ -457,7 +460,7 @@ namespace LockIn_API.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("WorkoutSessionExercises", (string)null);
+                    b.ToTable("WorkoutSessionExercises");
                 });
 
             modelBuilder.Entity("LockIn_API.Entities.DietLog", b =>
