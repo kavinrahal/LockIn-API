@@ -125,7 +125,7 @@ namespace LockIn_API.Services
             {
                 bool improved = false;
                 // Check if either reps or weight improved
-                if (currentExercise.ActualReps > previousSessionExercise.ActualReps)
+                if (currentExercise.ActualReps > previousSessionExercise.ActualReps || currentExercise.ActualWeight > previousSessionExercise.ActualWeight)
                     improved = true;
                 else if (currentExercise.ActualWeight.HasValue && previousSessionExercise.ActualWeight.HasValue &&
                          currentExercise.ActualWeight.Value > previousSessionExercise.ActualWeight.Value)

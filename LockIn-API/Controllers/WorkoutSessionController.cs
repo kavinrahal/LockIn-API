@@ -26,7 +26,7 @@ namespace LockIn_API.Controllers
                 return BadRequest(ModelState);
 
             // Extract userId from token and groupId from query params
-            var userId = Guid.Parse(User.FindFirst("sub")?.Value);
+            var userId = Guid.Parse(User.FindFirst("sub")?.Value!);
             if (!Guid.TryParse(Request.Query["groupId"], out Guid groupId))
                 return BadRequest("GroupId is required in query parameters.");
 
@@ -45,7 +45,7 @@ namespace LockIn_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetWorkoutSessions([FromQuery] Guid groupId)
         {
-            var userId = Guid.Parse(User.FindFirst("sub")?.Value);
+            var userId = Guid.Parse(User.FindFirst("sub")?.Value!);
             try
             {
                 var sessions = await _sessionService.GetWorkoutSessionsAsync(userId, groupId);

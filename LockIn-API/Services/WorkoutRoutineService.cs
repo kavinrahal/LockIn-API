@@ -52,6 +52,14 @@ namespace LockIn_API.Services
             _context.WorkoutRoutines.Add(routine);
             await _context.SaveChangesAsync();
 
+            // Retrieve the "Workout Routine" metric from the Metrics table.
+            var workoutRoutineMetric = await _context.Metrics.FirstOrDefaultAsync(m => m.Name == "Workout Routine");
+            if (workoutRoutineMetric != null)
+            {
+                // For each group member, add or update their goal for the workout routine metric.
+                await AddWorkoutRoutineGoalToGroupMembers(groupId, routine.RoutineId, workoutRoutineMetric.MetricId);
+            }
+
             return await GetWorkoutRoutineAsync(routine.RoutineId);
         }
 
@@ -83,5 +91,45 @@ namespace LockIn_API.Services
                 }).ToList()
             };
         }
+
+        private async Task AddWorkoutRoutineGoalToGroupMembers(Guid groupId, Guid routineId, Guid workoutRoutineMetricId)
+        {
+            // Retrieve all members of the group.
+            var groupMembers = await _context.GroupMembers
+                                             .Where(gm => gm.GroupId == groupId)
+                                             .ToListAsync();
+
+            foreach (var member in groupMembers)
+            {
+                // Check if a goal already exists for this metric for the member.
+                var existingGoal = await _context.GroupMemberGoals
+                                                 .FirstOrDefaultAsync
+                                                 (gmg => gmg.GroupId == groupId &&
+                                                gmg.UserId == member.UserId &&
+                                                gmg.MetricId == workoutRoutineMetricId);
+                if (existingGoal == null)
+                {
+                    // If not, create a new goal record.
+                    var newGoal = new GroupMemberGoal
+                    {
+                        GroupId = groupId,
+                        UserId = member.UserId,
+                        MetricId = workoutRoutineMetricId,
+                        WorkoutRoutineId = routineId, // Link to the newly created workout routine.
+                        GoalValue = null // For complex metrics like a workout routine, we use the foreign key.
+                    };
+
+                    _context.GroupMemberGoals.Add(newGoal);
+                }
+                else
+                {
+                    // If a goal record exists, update it with the new routine id.
+                    existingGoal.WorkoutRoutineId = routineId;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

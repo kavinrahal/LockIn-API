@@ -26,7 +26,7 @@ namespace LockIn_API.Controllers
                 return BadRequest(ModelState);
 
             // Extract userId and groupId from query params
-            var userId = Guid.Parse(User.FindFirst("sub")?.Value);
+            var userId = Guid.Parse(User.FindFirst("sub")?.Value!);
             if (!Guid.TryParse(Request.Query["groupId"], out Guid groupId))
                 return BadRequest("GroupId is required in query parameters.");
 
@@ -48,7 +48,7 @@ namespace LockIn_API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userId = Guid.Parse(User.FindFirst("sub")?.Value);
+            var userId = Guid.Parse(User.FindFirst("sub")?.Value!);
             try
             {
                 var updatedRoutine = await _routineService.AddRoutineExerciseAsync(routineId, dto, userId);
