@@ -2,6 +2,7 @@
 using LockIn_API.Entities;
 using LockIn_API.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using static LockIn_API.Controllers.UserController;
 
 namespace LockIn_API.Controllers
@@ -61,7 +62,7 @@ namespace LockIn_API.Controllers
         {
             try
             {
-                var userId = User.FindFirst("sub")?.Value; // assuming JWT subject claim
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (userId == null)
                     return Unauthorized();
 
@@ -83,7 +84,7 @@ namespace LockIn_API.Controllers
 
             try
             {
-                var userId = User.FindFirst("sub")?.Value;
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (userId == null)
                     return Unauthorized();
 

@@ -3,10 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LockIn_API.Entities
 {
-    public class GroupMemberGoal
+    public class GroupMemberGoalHistory
     {
         [Key]
-        public Guid GoalId { get; set; }
+        public Guid HistoryId { get; set; } 
+
+        [Required]
+        public Guid GroupMemberGoalId { get; set; } 
 
         [Required]
         public Guid GroupId { get; set; }
@@ -23,7 +26,6 @@ namespace LockIn_API.Entities
         [ForeignKey("MetricId")]
         public Metric Metric { get; set; }
 
-        // For numeric metrics
         public int? GoalValue { get; set; }
 
         // For complex metrics (e.g., Workout Routine)
@@ -31,6 +33,6 @@ namespace LockIn_API.Entities
         [ForeignKey("WorkoutRoutineId")]
         public WorkoutRoutine? WorkoutRoutine { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime ArchivedAt { get; set; } = DateTime.UtcNow;
     }
 }

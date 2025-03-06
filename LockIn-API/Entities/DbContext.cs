@@ -24,6 +24,8 @@ namespace LockIn_API.Entities
         public DbSet<WorkoutSession> WorkoutSessions { get; set; }
         public DbSet<WorkoutSessionExercise> WorkoutSessionExercises { get; set; }
 
+        public DbSet<GroupMemberGoalHistory> GroupMemberGoalHistories { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -36,18 +38,15 @@ namespace LockIn_API.Entities
             modelBuilder.Entity<GroupMetric>()
                 .HasKey(gm => new { gm.GroupId, gm.MetricId });
 
-            modelBuilder.Entity<GroupMemberGoal>()
-                .HasKey(gmg => new { gmg.GroupId, gmg.UserId, gmg.MetricId });
-
             modelBuilder.Entity<DietLog>()
                 .HasOne(dl => dl.User)
-                .WithMany(u => u.DietLogs)  // Ensure User entity has a collection property for DietLogs
+                .WithMany(u => u.DietLogs) 
                 .HasForeignKey(dl => dl.UserId)
-                .OnDelete(DeleteBehavior.Restrict); // Disables cascade delete for this FK
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DietLog>()
                 .HasOne(dl => dl.Group)
-                .WithMany(g => g.DietLogs)  // Ensure Group entity has a collection property for DietLogs
+                .WithMany(g => g.DietLogs)
                 .HasForeignKey(dl => dl.GroupId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -120,6 +119,18 @@ namespace LockIn_API.Entities
             modelBuilder.Entity<WorkoutSession>()
                 .HasOne(st => st.Group)
                 .WithMany(g => g.WorkoutSessions)
+                .HasForeignKey(st => st.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GroupMemberGoalHistory>()
+                .HasOne(st => st.User)
+                .WithMany(g => g.GroupMemberGoalHistories)
+                .HasForeignKey(st => st.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GroupMemberGoalHistory>()
+                .HasOne(st => st.Group)
+                .WithMany(g => g.GroupMemberGoalHistories)
                 .HasForeignKey(st => st.GroupId)
                 .OnDelete(DeleteBehavior.Restrict);
 

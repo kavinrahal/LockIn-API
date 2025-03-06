@@ -24,8 +24,8 @@ namespace LockIn_API.Entities
 
         // Navigation properties
         public ICollection<GroupMember> GroupMembers { get; set; } = new List<GroupMember>();
-
         public ICollection<GroupMemberGoal> GroupMemberGoals { get; set; } = new List<GroupMemberGoal>();
+        public ICollection<GroupMemberGoalHistory> GroupMemberGoalHistories { get; set; } = new List<GroupMemberGoalHistory>();
         public ICollection<GroupMetric> GroupMetrics { get; set; } = new List<GroupMetric>();
         public ICollection<WorkoutRoutine> WorkoutRoutines { get; set; } = new List<WorkoutRoutine>();
         public ICollection<DietLog> DietLogs { get; set; } = new List<DietLog>();

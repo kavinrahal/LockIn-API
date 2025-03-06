@@ -70,8 +70,8 @@ namespace LockIn_API.Services
             var group = await _context.Groups
                         .Include(g => g.GroupMembers)
                             .ThenInclude(gm => gm.User)
-                        .Include(g => g.GroupMetrics)               // Add this Include
-                            .ThenInclude(gm => gm.Metric)            // And then include the Metric
+                        .Include(g => g.GroupMetrics)             
+                            .ThenInclude(gm => gm.Metric)           
                         .FirstOrDefaultAsync(g => g.GroupId == groupId);
 
             if (group == null)
@@ -103,10 +103,12 @@ namespace LockIn_API.Services
         public async Task<IEnumerable<GroupDetailsDto>> GetUserGroupsAsync(Guid userId)
         {
             var groups = await _context.Groups
-                .Where(g => g.GroupMembers.Any(gm => gm.UserId == userId))
-                .Include(g => g.GroupMembers)
-                    .ThenInclude(gm => gm.User)
-                .ToListAsync();
+                        .Where(g => g.GroupMembers.Any(gm => gm.UserId == userId))
+                        .Include(g => g.GroupMembers)
+                            .ThenInclude(gm => gm.User)
+                        .Include(g => g.GroupMetrics)             
+                            .ThenInclude(gm => gm.Metric)         
+                        .ToListAsync();
 
             return groups.Select(g => new GroupDetailsDto
             {
@@ -119,7 +121,13 @@ namespace LockIn_API.Services
                     UserId = gm.UserId,
                     FullName = gm.User.FullName,
                     JoinedAt = gm.JoinedAt
-                }).ToList()
+                }).ToList(),
+                Metrics = g.GroupMetrics?.Select(gm => new MetricDto
+                {
+                    MetricId = gm.MetricId,
+                    Name = gm.Metric.Name,
+                    DataType = gm.Metric.DataType
+                }).ToList() ?? new List<MetricDto>()
             }).ToList();
         }
 
@@ -142,7 +150,16 @@ namespace LockIn_API.Services
                 JoinedAt = DateTime.UtcNow
             };
 
-            _context.GroupMembers.Add(newMember);
+
+            // Check if member already exists in group.
+            bool groupMemberExists = await _context.GroupMembers.
+                AnyAsync(gm => gm.GroupId == group.GroupId && gm.UserId == newMember.UserId);
+
+            if (!groupMemberExists)
+            {
+                _context.GroupMembers.Add(newMember);
+            }
+
             await _context.SaveChangesAsync();
         }
     }
