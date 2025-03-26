@@ -23,8 +23,8 @@ namespace LockIn_API.Entities
         public DbSet<StepTracking> StepTracking { get; set; }
         public DbSet<WorkoutSession> WorkoutSessions { get; set; }
         public DbSet<WorkoutSessionExercise> WorkoutSessionExercises { get; set; }
-
         public DbSet<GroupMemberGoalHistory> GroupMemberGoalHistories { get; set; }
+        public DbSet<GoalAchievement> GoalAchievements { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
