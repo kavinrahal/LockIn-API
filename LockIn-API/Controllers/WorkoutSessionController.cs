@@ -3,6 +3,7 @@ using LockIn_API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace LockIn_API.Controllers
 {
@@ -20,15 +21,18 @@ namespace LockIn_API.Controllers
 
         // POST: api/workoutsession
         [HttpPost]
-        public async Task<IActionResult> LogWorkoutSession([FromBody] LogWorkoutSessionDto dto)
+        public async Task<IActionResult> LogWorkoutSession([FromBody] LogWorkoutSessionDto dto, [FromQuery] Guid groupId)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             // Extract userId from token and groupId from query params
-            var userId = Guid.Parse(User.FindFirst("sub")?.Value!);
-            if (!Guid.TryParse(Request.Query["groupId"], out Guid groupId))
-                return BadRequest("GroupId is required in query parameters.");
+            var subClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (subClaim == null)
+            {
+                throw new Exception("User ID (sub claim) not found in token.");
+            }
+            var userId = Guid.Parse(subClaim.Value);
 
             try
             {
@@ -45,7 +49,12 @@ namespace LockIn_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetWorkoutSessions([FromQuery] Guid groupId)
         {
-            var userId = Guid.Parse(User.FindFirst("sub")?.Value!);
+            var subClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (subClaim == null)
+            {
+                throw new Exception("User ID (sub claim) not found in token.");
+            }
+            var userId = Guid.Parse(subClaim.Value);
             try
             {
                 var sessions = await _sessionService.GetWorkoutSessionsAsync(userId, groupId);

@@ -25,7 +25,7 @@ namespace LockIn_API.DTOs
     public class CreateWorkoutRoutineDto
     {
         [Required]
-        public string RoutineName { get; set; }
+        public required string RoutineName { get; set; }
 
         [Required]
         public int TotalDays { get; set; }

@@ -3,6 +3,7 @@ using LockIn_API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace LockIn_API.Controllers
 {
@@ -20,15 +21,18 @@ namespace LockIn_API.Controllers
 
         // POST: api/workoutroutine
         [HttpPost]
-        public async Task<IActionResult> CreateWorkoutRoutine([FromBody] CreateWorkoutRoutineDto dto)
+        public async Task<IActionResult> CreateWorkoutRoutine([FromBody] CreateWorkoutRoutineDto dto, [FromQuery] Guid groupId)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             // Extract userId and groupId from query params
-            var userId = Guid.Parse(User.FindFirst("sub")?.Value!);
-            if (!Guid.TryParse(Request.Query["groupId"], out Guid groupId))
-                return BadRequest("GroupId is required in query parameters.");
+            var subClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (subClaim == null)
+            {
+                throw new Exception("User ID (sub claim) not found in token.");
+            }
+            var userId = Guid.Parse(subClaim.Value);
 
             try
             {
@@ -48,7 +52,12 @@ namespace LockIn_API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userId = Guid.Parse(User.FindFirst("sub")?.Value!);
+            var subClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (subClaim == null)
+            {
+                throw new Exception("User ID (sub claim) not found in token.");
+            }
+            var userId = Guid.Parse(subClaim.Value);
             try
             {
                 var updatedRoutine = await _routineService.AddRoutineExerciseAsync(routineId, dto, userId);

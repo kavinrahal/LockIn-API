@@ -31,6 +31,33 @@ namespace LockIn_API.Services.Aggregators
                 s.GroupId == groupId &&
                 s.SessionDate >= periodStart &&
                 s.SessionDate <= periodEnd);
+
+            if (session == null || !session.SessionExercises.Any()) return 0;
+
+            int totalExercises = routine.RoutineExercises.Count;
+            int completedExercises = 0;
+
+            foreach (var planned in routine.RoutineExercises)
+            {
+                var actual = session.SessionExercises
+                    .FirstOrDefault(se => se.ExerciseId == planned.ExerciseId);
+
+                if (actual != null)
+                {
+                    double setsRatio = (double)actual.ActualSets / planned.Sets;
+                    double repsRatio = (double)actual.ActualReps / planned.Reps;
+                    double weightRatio = (double)((double)actual.ActualWeight / planned.Weight);
+
+                    if (setsRatio >= 0.9 || repsRatio >= 0.9 || weightRatio >= 0.9)
+                    {
+                        completedExercises++;
+                    }
+                }
+            }
+
+            return (double)completedExercises / totalExercises >= 0.9 ? 1 : 0;
+
+
         }
     }
 }
