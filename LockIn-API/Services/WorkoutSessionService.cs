@@ -143,7 +143,7 @@ namespace LockIn_API.Services
                         plannedExercise.Weight = currentExercise.ActualWeight;
                         await _context.SaveChangesAsync();
                     }
-                    return $"Great job on {currentExercise.Exercise.ExerciseName}! Your performance improved (Reps: {previousSessionExercise.ActualReps} -> {currentExercise.ActualReps}).";
+                    return $"Great job! You beat your personal best for this exercise!.";
                 }
             }
             return null;
